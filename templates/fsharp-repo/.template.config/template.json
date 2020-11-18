@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "davnavr",
+    "classifications": [ "Common", "Solution" ],
+    "identity": "davnavr.FSharpConsoleRepo.Template",
+    "name": "Git Repo + F# Console App + FAKE",
+    "shortName": "fsrepo",
+    "sourceName": "MyProject",
+    "tags": {
+        "language": "F#",
+        "type": "project"
+    }
+}
