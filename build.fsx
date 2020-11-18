@@ -22,6 +22,8 @@ module NuGetCli = Fake.DotNet.NuGet.NuGet
 let rootDir = __SOURCE_DIRECTORY__
 let outDir = rootDir </> "out"
 
+let version = Environment.environVarOrDefault "PACKAGE_VERSION" "0.0.0"
+
 [<AutoOpen>]
 module Helpers =
     let handleErr msg: ProcessResult -> _ =
@@ -30,8 +32,7 @@ module Helpers =
             failwithf "Process exited with code %i: %s" ecode msg
         | _ -> ()
 
-Target.create "Clean" <| fun _ ->
-    Shell.cleanDir outDir
+Target.create "Clean" <| fun _ -> Shell.cleanDir outDir
 
 Target.create "Build Templates" <| fun _ ->
     let templates =
@@ -66,7 +67,16 @@ Target.create "Build Templates" <| fun _ ->
 
 Target.create "Pack" <| fun _ ->
     // nuget pack -OutputDirectory ./out -NoDefaultExcludes -Properties PackageVersion=0.1.0
-    // TODO: Exclude bin and obj files.
+    // TODO: Exclude bin and obj files properly.
+    NuGetCli.NuGetPackDirectly
+        (fun p ->
+            { p with
+                NoDefaultExcludes = true
+                OutputPath = outDir
+                Properties = [ "PackageVersion", version ]
+                Version = version
+                WorkingDir = rootDir })
+        (rootDir </> "davnavr.FSharpTemplates.nuspec")
     ()
 
 "Clean" ==> "Build Templates" ==> "Pack"
