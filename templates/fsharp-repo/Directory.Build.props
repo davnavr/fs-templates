@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <RootDirectory>$(MSBuildThisFileDirectory)</RootDirectory>
+  </PropertyGroup>
+
+</Project>

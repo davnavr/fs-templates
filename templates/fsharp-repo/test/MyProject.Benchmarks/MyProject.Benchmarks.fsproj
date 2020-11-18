@@ -6,7 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Program.fs" />
+    <Compile Include="Benchmarks.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+    <ProjectReference Include="$(RootDirectory)/src/MyProject/MyProject.fsproj" />
   </ItemGroup>
 
 </Project>
