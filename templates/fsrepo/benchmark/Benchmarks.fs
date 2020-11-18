@@ -8,16 +8,16 @@ open BenchmarkDotNet.Running
 [<MemoryDiagnoser>]
 [<MinColumn; MaxColumn>]
 type Benchmarks() =
-    let data = [ 1..100 ]
+    let data = [ 1..20 ]
 
     [<Benchmark>]
     member _.MyBenchmark() = List.sum data
 
 [<EntryPoint>]
-let main _ =
+let main argv =
     let assm = Reflection.Assembly.GetExecutingAssembly()
     BenchmarkSwitcher
         .FromAssembly(assm)
-        .RunAll()
+        .Run(args = argv)
     |> ignore
     0

@@ -73,6 +73,25 @@ Target.create "Test" <| fun _ ->
         (runProj id >> handleErr "One or more tests failed")
         projs
 
-"Clean" ==> "Build" ==> "Test"
+Target.create "Run Benchmarks" <| fun _ ->
+    runProj
+        (fun args ->
+            [
+                yield! args
+                "--"
+                "--filter *"
+                "--artifacts"
+                outDir </> "BenchmarkDotNet.Artifacts"
+            ])
+        (rootDir </> "benchmark" </> "MyProject.Benchmarks.fsproj")
+    |> handleErr "One or more benchmarks could not be run"
 
-Target.runOrDefault "Test"
+Target.create "All" ignore
+
+"Clean"
+==> "Build"
+==> "Test"
+==> "Run Benchmarks"
+==> "All"
+
+Target.runOrDefault "All"
