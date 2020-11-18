@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <authors>davnavr</authors>
+    <description>F# templates that I use</description>
+    <id>davnavr.FSharpTemplates</id>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/davnavr/fs-templates</projectUrl>
+    <tags>f# fsharp template</tags>
+    <version>$PackageVersion$</version>
+  </metadata>
+  <files>
+    <file src="templates\**" target="content\" />
+  </files>
+</package>
