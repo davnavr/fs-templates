@@ -8,7 +8,7 @@ open BenchmarkDotNet.Running
 [<MemoryDiagnoser>]
 [<MinColumn; MaxColumn>]
 type Benchmarks() =
-    let data = [ 1..20 ]
+    let data = [ 1..5 ]
 
     [<Benchmark>]
     member _.MyBenchmark() = List.sum data
