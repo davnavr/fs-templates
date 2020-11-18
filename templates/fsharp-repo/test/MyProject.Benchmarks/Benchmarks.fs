@@ -14,10 +14,10 @@ type Benchmarks() =
     member _.MyBenchmark() = List.sum data
 
 [<EntryPoint>]
-let main argv =
+let main _ =
     let assm = Reflection.Assembly.GetExecutingAssembly()
     BenchmarkSwitcher
         .FromAssembly(assm)
-        .Run(args = argv)
+        .RunAll()
     |> ignore
     0

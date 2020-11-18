@@ -13,12 +13,13 @@ open Fake.Core.TargetOperators
 open Fake.DotNet
 open Fake.IO
 open Fake.IO.FileSystemOperators
+open Fake.IO.Globbing.Operators
 
 module DotNetCli = Fake.DotNet.DotNet
 
 let rootDir = __SOURCE_DIRECTORY__
 let outDir = rootDir </> "out"
-let srcDir = rootDir </> "src"
+let slnFile = rootDir </> "MyProject.sln"
 
 [<AutoOpen>]
 module Helpers =
@@ -28,14 +29,49 @@ module Helpers =
             failwithf "Process exited with code %i: %s" ecode msg
         | _ -> ()
 
+    let runProj args proj =
+        [
+            "--configuration Release"
+            "--no-build"
+            "--no-restore"
+        ]
+        |> args
+        |> String.concat " "
+        |> sprintf
+            "--project %s %s"
+            proj
+        |> DotNetCli.exec
+            id
+            "run"
+
 Target.create "Clean" <| fun _ ->
     Shell.cleanDir outDir
 
+    List.iter
+        (fun cfg ->
+            [
+                slnFile
+                sprintf "--configuration %s" cfg
+                "--nologo"
+            ]
+            |> String.concat " "
+            |> DotNetCli.exec id "clean"
+            |> handleErr "Unexpected error while cleaning solution")
+        [ "Debug"; "Release" ]
+
 Target.create "Build" <| fun _ ->
-    Trace.log "Building..."
+    DotNetCli.build
+        (fun opt ->
+            { opt with
+                Configuration = DotNetCli.Release
+                NoRestore = true })
+        slnFile
 
 Target.create "Test" <| fun _ ->
-    Trace.log "Testing..."
+    let projs = !!(rootDir </> "test" </> "*" </> "*.fsproj")
+    Seq.iter
+        (runProj id >> handleErr "One or more tests failed")
+        projs
 
 "Clean" ==> "Build" ==> "Test"
 
