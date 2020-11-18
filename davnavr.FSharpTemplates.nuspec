@@ -10,6 +10,6 @@
     <version>$PackageVersion$</version>
   </metadata>
   <files>
-    <file src="templates\**" target="content\" />
+    <file src="templates\**" target="content\" exclude="templates\**\bin;templates\**\obj" />
   </files>
 </package>
