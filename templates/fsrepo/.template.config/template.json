@@ -3,7 +3,8 @@
     "author": "davnavr",
     "classifications": [ "Common", "Solution" ],
     "identity": "davnavr.FSharpConsoleRepo.Template",
-    "name": "Git Repo + F# Console App + FAKE",
+    "name": "F# Repo + FAKE",
+    "preferNameDirectory": true,
     "shortName": "fsrepo",
     "sourceName": "MyProject",
     "tags": {
