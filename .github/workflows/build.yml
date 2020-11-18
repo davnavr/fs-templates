@@ -3,5 +3,37 @@ name: Build
 on:
   push:
     branches: [ master ]
+    tags:
       - 'v*'
     
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+    - name: Get Tag Version
+      id: release_version
+      run: |
+        echo ::set-output name=current_version::${GITHUB_REF#refs/tags/v}
+      shell: bash
+    - name: Read Changelog
+      id: release_notes
+      uses: mindsers/changelog-reader-action@v2
+      with:
+        version: ${{ steps.release_version.outputs.current_version }}
+        path: ./CHANGELOG.md
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
+    - name: Install Tools
+      run: dotnet tool restore
+    - name: Build
+      env:
+        PACKAGE_VERSION: ${{ steps.release_notes.outputs.version }}
+      run: dotnet fake run
